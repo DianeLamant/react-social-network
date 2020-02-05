@@ -1,12 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import Login from './pages/Login';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+
+const Routing = () => {
+
+    const [ loggedIn, setLoggedIn ] = useState(false)
+
+    useEffect(() => {
+        const storage = localStorage.getItem('diane');
+        
+        setLoggedIn(storage);
+        
+    }, [])
+
+    return <>
+        <Router>
+            <Switch>
+                <Route path='/login' component={Login} />
+                <Route path='/' component={App} />
+            </Switch>
+            {loggedIn ?
+                <Redirect to='/' /> 
+                : 
+                <Redirect to='/login' />
+            }
+        </Router>
+            
+    </>
+}
+
+ReactDOM.render(<Routing />, document.getElementById('root'))
